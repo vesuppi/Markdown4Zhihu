@@ -6,11 +6,11 @@
 
 我们在讨论并行算法的时候需要假定一个计算（机器）模型，就像我们讨论串行算法会假定RAM模型一样。对于并行算法设计，一个常见的并行模型是PRAM，即Parallel RAM，它假定所有的处理器都能直接访问一个全局的内存，甚至不同的处理器还能进行并行的读或者写。另一种计算模型是分布式的，即每个处理器有自己local的内存，然后大家通过网络连接在一起。当然还有很多其他的模型，这里暂且不做详细介绍。本文的讨论中我们会使用分布式内存的模型。
 
-<img src="/Users/tong/Library/Application Support/typora-user-images/image-20220203200420590.png" alt="image-20220203200420590" style="zoom:50%;" />
+<img src=".image/image-20220203200420590.png" alt="image-20220203200420590" style="zoom:50%;" />
 
 
 
-<img src="/Users/tong/Library/Application Support/typora-user-images/image-20220203200451603.png" alt="image-20220203200451603" style="zoom:50%;" />
+<img src=".image/image-20220203200451603.png" alt="image-20220203200451603" style="zoom:50%;" />
 
 对于分布式内存的计算模型，既然处理器是通过网络连接在一起，那拓扑结构就很重要了。我们看三种常见的拓扑结构：
 
@@ -32,13 +32,13 @@
 
 当我们用二进制数来表示每一个节点的时候，那么对于bit j，如果两个节点只有一个bit不同，那他们之间就存在链接。譬如假如一共有8个节点，我们会得到如下的链接（十进制表示）：
 
-<img src="/Users/tong/Library/Application Support/typora-user-images/image-20220203214026795.png" alt="image-20220203214026795" style="zoom:50%;" />
+<img src=".image/image-20220203214026795.png" alt="image-20220203214026795" style="zoom:50%;" />
 
 这个模式有没有看着很熟悉，没错，**超方形本质上表达的是像FFT一样的蝶形网络**，这也正是为什么超方形需要的链接数是$p\log p/2$。本文的讨论中我们假定网络的连接方式是超方形。
 
 下图是几种常见的拓扑结构的一些性质（cost就是链接数）：
 
-<img src="/Users/tong/Library/Group Containers/6N38VWS5BX.ru.keepcoder.Telegram/stable/account-17738711841262596695/postbox/media/telegram-cloud-photo-size-1-5179375683464440166-y.jpg" alt="telegram-cloud-photo-size-1-5179375683464440166-y" style="zoom:50%;" />
+<img src=".image/telegram-cloud-photo-size-1-5179375683464440166-y.jpg" alt="telegram-cloud-photo-size-1-5179375683464440166-y" style="zoom:50%;" />
 
 ## 并行求和
 
@@ -46,7 +46,7 @@
 
 每个处理器被分配$n/p$个数，然后先在本地完成这些数的求和，这时问题便变成了用$p$个处理器对$p$个数进行求和。在超方形的拓扑结构下，只需要$\log p$次通信就能完成求和，如下图所示。
 
-<img src="/Users/tong/Library/Application Support/typora-user-images/image-20220204083159570.png" alt="image-20220204083159570" style="zoom:50%;" />
+<img src=".image/image-20220204083159570.png" alt="image-20220204083159570" style="zoom:50%;" />
 
 于是这里的并行时间就是（其中$\tau$代表发送一个数字需要的通信时间相对本地的计算时间的比值）：
 
@@ -83,7 +83,7 @@ for i in range(1, n):
 
 这里我们采用分治法的思路，将原序列对半切，如下所示。然后对于前一半和后一半分别计算他们的前缀和。当他们分别完成自己的计算以后，我们只需要把前一半的总和 $S_{n/2-1}$ 发送给后一半的所有处理单元，让他们把自己的local sum加上这个前一半的总和，就能得到正确的前缀和，如下图所示。
 
-![image-20220203185606987](/Users/tong/Library/Application Support/typora-user-images/image-20220203185606987.png)
+![image-20220203185606987](.image/image-20220203185606987.png)
 
 
 
@@ -283,7 +283,7 @@ add prefix_sum to each element in local_prefix_sum
 
 Parallel prefix 
 
-![image-20220204084513146](/Users/tong/Library/Application Support/typora-user-images/image-20220204084513146.png)
+![image-20220204084513146](.image/image-20220204084513146.png)
 
 Why log p in computation?
 
